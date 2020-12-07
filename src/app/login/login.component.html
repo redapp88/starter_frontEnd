@@ -1,0 +1,67 @@
+<ion-content class="transparent">
+    <form [formGroup]="form">
+        <ion-grid class="backImages">
+            <ion-row>
+                <ion-col>
+                    <h1 align="center">Starter</h1>
+                </ion-col>
+            </ion-row>
+            <ion-row class="topMargin">
+                <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+                    <ion-list>
+                        <ion-item>
+                            <ion-label class="font-weight-bold" position="floating">
+                                Nom d'utilisateur
+                            </ion-label>
+                            <ion-input
+                                    type="text"
+                                    formControlName="username"
+                                    class="font-weight-bold">
+                            </ion-input>
+                            <div *ngIf="(form.controls['username'].errors && form.controls['username'].touched)">
+                                <ion-text class="smallText" color="danger"> Minimum 4 caracteres</ion-text>
+                            </div>
+                        </ion-item>
+
+                        <ion-item>
+                            <ion-label class="font-weight-bold" position="floating">
+                                mot de passe
+                            </ion-label>
+                            <ion-input
+                                    class="font-weight-bold"
+                                    type="password"
+                                    formControlName="password">
+                            </ion-input>
+
+                            <div *ngIf="(form.controls['password'].errors && form.controls['password'].touched)">
+                                <ion-text class="smallText" color="danger">6 caractères minimum</ion-text>
+                            </div>
+                        </ion-item>
+                        <!-- <ion-item lines="none" align="center">
+                             <ion-text class="smallText" color="primary">mot de passe oubié?</ion-text>
+                         </ion-item>-->
+                    </ion-list>
+
+                </ion-col>
+            </ion-row>
+
+            <ion-row>
+
+                <ion-col size-sm="8" offset-sm="2" size-md="6" offset-md="3" size-lg="4" offset-lg="4">
+                    <ion-button (click)="onAction()"
+                                [disabled]="!loginValid()"
+                                class="font-weight-bold"
+                                color="primary"
+                                expand="block">
+                        Login
+                    </ion-button>
+                    <div align="center" class="topMargin">
+                        <ion-label (click)="onGoForgetPassword()">
+                            <ion-text color="secondary">Mot de passe oublié</ion-text>
+                        </ion-label>
+                    </div>
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+    </form>
+</ion-content>

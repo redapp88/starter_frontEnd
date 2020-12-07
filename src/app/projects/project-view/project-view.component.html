@@ -1,0 +1,97 @@
+<ion-content>
+    <ion-item>
+ <ion-grid>
+     <ion-row>
+         <ion-col align="center">
+             <ion-chip outline align="left">
+                 <ion-avatar>
+                 <ion-img
+                         src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"></ion-img>
+                 </ion-avatar>
+                 <ion-text >{{project.owner.name}}</ion-text>
+             </ion-chip>
+             <ion-text class="bold" style="font-size: small;font-style: oblique">de {{project.owner.city}}</ion-text>
+         </ion-col>
+     </ion-row>
+     <ion-row align="center">
+
+     </ion-row>
+     <ion-row>
+
+         <ion-col><ion-icon name="mail" color="secondary" size="large"></ion-icon> <ion-text class="leftMargin">{{project.owner.mail}}</ion-text></ion-col>
+     </ion-row>
+     <ion-row>
+         <ion-col><ion-icon name="logo-whatsapp" color="success" size="large"></ion-icon> <ion-text class="leftMargin">{{project.owner.phone}}</ion-text></ion-col>
+     </ion-row>
+     <ion-row>
+         <ion-col align="center"> <ion-text style="font-size: small" >{{project.owner.description}}</ion-text></ion-col>
+     </ion-row>
+ </ion-grid>
+
+    </ion-item>
+
+    <ion-item>
+        <ion-card>
+            <ion-card-header>
+
+                <ion-card-title align="center">
+                    <ion-chip outline align="left">
+                        {{project.title}}
+                    </ion-chip>
+                </ion-card-title>
+                <ion-grid>
+                    <ion-row>
+                        <ion-col size="6">
+                            <ion-text align="right">{{project.creationDate | date:"dd/MM/yyyy à
+                                HH:mm"}}
+                            </ion-text>
+                        </ion-col>
+                        <ion-col offset="1" size="5">
+                            <ion-text align="left" class="bold" color="primary">
+                                {{project.categorie}}
+                            </ion-text>
+                        </ion-col>
+                    </ion-row>
+                </ion-grid>
+
+                <ion-card-subtitle><ion-text class="bold" color="dark">{{project.city}}</ion-text></ion-card-subtitle>
+            </ion-card-header>
+            <ion-card-content>
+                <p> {{project.description}}</p>
+                <p class="bold"> cherche:</p>
+                <ion-badge *ngFor="let profile of project.profiles">{{profile.label}}</ion-badge>
+            </ion-card-content>
+        </ion-card>
+    </ion-item>
+<ion-item>
+    <ion-grid>
+        <ion-item-divider><ion-text style="font-size: small" color="success">Interets</ion-text></ion-item-divider>
+        <ion-row *ngFor="let interest of interests" style="border-bottom: #8c8c8c solid medium">
+
+            <ion-col size="5" *ngIf="interest.direction == 'ProjectToUser'">
+                <div >
+                    <ion-text color="primary">{{interest.project.title}}</ion-text><br>
+                    <ion-text class="smallText">{{interest.creationDate | date:'dd/MM/yyyy à hh:mm'}}</ion-text>
+                </div>
+            </ion-col>
+
+            <ion-col size="7" *ngIf="interest.direction == 'ProjectToUser'">
+                <div class="leftMargin" style="font-size: small">{{interest.message}}</div>
+            </ion-col>
+
+
+
+            <ion-col size="5" *ngIf="interest.direction == 'UserToProject'">
+                <div class="leftMargin" style="font-size: small">{{interest.message}}</div>
+
+            </ion-col>
+            <ion-col size="7" *ngIf="interest.direction == 'UserToProject'">
+                <div  >
+                    <ion-text color="primary">{{interest.user.name}}</ion-text><br>
+                    <ion-text class="smallText">{{interest.creationDate | date:'dd/MM/yyyy à hh:mm'}}</ion-text>
+                </div>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-item>
+</ion-content>

@@ -1,0 +1,32 @@
+ion-header {
+  &.header-md:after {
+    background: none;
+  }
+}
+
+#cercle {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+}
+ion-card{
+  display: flex;
+  flex-direction: column;
+  width: 100% !important;
+  margin: 0 !important;
+}
+ion-chip {
+  font-size: medium ;
+  text-align: left;
+}
+
+.ellipsis {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+.horizontal {
+  display: inline-flex;
+}

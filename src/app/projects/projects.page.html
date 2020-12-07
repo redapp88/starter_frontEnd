@@ -1,0 +1,265 @@
+<ion-header>
+    <ion-toolbar class="ion-no-border">
+        <ion-buttons slot="start">
+            <ion-menu-button menu="m1" slot="start"></ion-menu-button>
+        </ion-buttons>
+        <ion-buttons slot="end">
+            <ion-label *ngIf="!authenticated" color="primary">
+                <ion-button (click)="onOpenLogin()">
+                    <ion-icon size="large" name="log-in-outline"></ion-icon>
+                    <ion-text color="primary">Login</ion-text>
+                </ion-button>
+            </ion-label>
+            <ion-button *ngIf="authenticated" (click)="OnViewUserProjects($event)">
+                <ion-icon name="person-circle-outline" size="large"></ion-icon>
+            </ion-button>
+        </ion-buttons>
+    </ion-toolbar>
+</ion-header>
+
+<ion-content fullscreen *ngIf="mode=='projects'">
+    <form [formGroup]="formSearch">
+        <ion-grid>
+            <ion-row>
+                <ion-col size="10">
+                    <ion-item>
+                        <ion-label class="smallText" align="left" position="floating">
+                            mot clefs
+                        </ion-label>
+                        <ion-input type="text" formControlName="keyword"></ion-input>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="2">
+                    <ion-button (click)="onLoadProjects()">
+                        <ion-icon name="search-outline"></ion-icon>
+                    </ion-button>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col size="6">
+                    <ion-item>
+                        <ion-select formControlName="categorie">
+                            <ion-select-option value="*">categories</ion-select-option>
+                            <ion-select-option value="commerce">Commerce</ion-select-option>
+                            <ion-select-option value="Ecommerce">Ecommerce</ion-select-option>
+                            <ion-select-option value="informatique">informatique</ion-select-option>
+                            <ion-select-option value="agriculture">agriculture</ion-select-option>
+                            <ion-select-option value="industrie">industrie</ion-select-option>
+                            <ion-select-option value="artisanat">artisanat</ion-select-option>
+                            <ion-select-option value="sport">sport</ion-select-option>
+                            <ion-select-option value="tourisme">tourisme</ion-select-option>
+                            <ion-select-option value="autre">autre</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+                <ion-col size="6">
+                    <ion-item>
+                        <ion-select formControlName="city">
+                            <ion-select-option value="*">Toutes villes</ion-select-option>
+                            <ion-select-option value="Casablanca">Casablanca</ion-select-option>
+                            <ion-select-option value="Rabat">Rabat</ion-select-option>
+                            <ion-select-option value="Fes">Fes</ion-select-option>
+                            <ion-select-option value="Meknes"> Meknes</ion-select-option>
+                            <ion-select-option value="Tanger">Tanger</ion-select-option>
+                            <ion-select-option value="Tetouan">Tetouan</ion-select-option>
+                            <ion-select-option value="Marrakech">Marrakech</ion-select-option>
+                            <ion-select-option value="Agadir">Agadir</ion-select-option>
+                        </ion-select>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row *ngIf="authenticated">
+                <ion-col>
+                    <ion-item lines="none">
+
+                        <ion-checkbox class="rightMargin" formControlName="compatibles"></ion-checkbox>
+                        <ion-text style="font-size: small" class="smallText" color="primary">Afficher seulement les
+                            projets qui cherchent mes compétances
+                        </ion-text>
+                    </ion-item>
+                </ion-col>
+            </ion-row>
+            <ion-row>
+                <ion-col>
+                    <ion-list>
+                        <ion-item *ngFor="let project of loadedProjects">
+                            <ion-card>
+                                <ion-card-header>
+
+                                    <ion-card-title>
+                                        <ion-chip outline align="left" (click)="onProjectView(project)">
+                                            <ion-avatar>
+                                                <ion-img
+                                                        src="https://images.pexels.com/photos/220453/pexels-photo-220453.jpeg?auto=compress&cs=tinysrgb&dpr=1&w=500"></ion-img>
+                                            </ion-avatar>
+                                            {{project.owner.name}}
+                                            <ion-icon name="caret-forward-outline"></ion-icon>
+                                            {{project.title}}
+                                        </ion-chip>
+                                    </ion-card-title>
+                                    <ion-grid>
+                                        <ion-row>
+                                            <ion-col size="6">
+                                                <ion-text align="right">{{project.creationDate | date:"dd/MM/yyyy à
+                                                    HH:mm"}}
+                                                </ion-text>
+                                            </ion-col>
+                                            <ion-col offset="1" size="5">
+                                                <ion-text align="left" class="bold" color="primary">
+                                                    {{project.categorie}}
+                                                </ion-text>
+                                            </ion-col>
+                                        </ion-row>
+                                    </ion-grid>
+
+
+                                    <ion-card-subtitle><ion-text class="bold" color="dark">{{project.city}}</ion-text></ion-card-subtitle>
+                                </ion-card-header>
+                                <ion-card-content>
+                                    <p class="ellipsis"> {{project.description}}</p>
+                                    <p class="bold"> cherche:</p>
+                                    <ion-badge *ngFor="let profile of project.profiles">{{profile.label}}</ion-badge>
+
+                                    <div *ngIf="authenticated">
+                                        <ion-label align="right"
+                                                   *ngIf="getInterest(project.id,currentUser.username,'UserToProject').length<=0"
+                                                   (click)="onInterest(project)">
+                                            <ion-icon size="large" name="heart-circle-outline"></ion-icon>
+                                            <span align="right"
+                                                  *ngIf="getInverseInterestByDetais(currentUser.username,project.id,'UserToProject').length>0">
+                                                <ion-text class="smallText bold"
+                                                          color="tertiary">ce projet s'interesse à vous </ion-text>
+                                        </span>
+                                        </ion-label>
+
+
+                                        <ion-label align="right"
+                                                   *ngIf="getInterest(project.id,currentUser.username,'UserToProject').length>0">
+                                            <ion-icon size="large" color="danger" name="heart-circle-outline"
+                                                      (click)="onCancelInterest(getInterest(project.id,currentUser.username,'UserToProject')[0])"></ion-icon>
+                                            <span align="right"
+                                                  *ngIf="getInverseInterest(getInterest(project.id,currentUser.username,'UserToProject')[0]).length>0">
+                                                <ion-icon color="success" class="leftMargin" size="large"
+                                                          name="people-outline"></ion-icon>
+                                                <ion-text class="smallText bold"
+                                                          color="success">Interet Partagé</ion-text>
+
+                                        </span>
+                                        </ion-label>
+                                    </div>
+                                </ion-card-content>
+                            </ion-card>
+                        </ion-item>
+                    </ion-list>
+
+                </ion-col>
+            </ion-row>
+        </ion-grid>
+
+
+    </form>
+
+</ion-content>
+
+<ion-content fullscreen *ngIf="mode=='interests'">
+    <ion-grid>
+        <ion-radio-group [(ngModel)]="interestDirection">
+            <ion-row>
+                <ion-col>
+                    <ion-item lines="none">
+
+                        <ion-radio mode="md" color="success " item-left value="ProjectToUser"></ion-radio>
+                        <ion-label class="smallText">Interet reçus</ion-label>
+                    </ion-item>
+                </ion-col>
+
+                <ion-col>
+                    <ion-item lines="none">
+
+                        <ion-radio mode="md" color="secondary" item-left value="UserToProject"></ion-radio>
+                        <ion-label class="smallText">Mes Interets</ion-label>
+                    </ion-item>
+                </ion-col>
+
+
+            </ion-row>
+        </ion-radio-group>
+        <ion-row>
+            <ion-col>
+                <ion-list>
+                    <div *ngFor="let interest of loadedInterests">
+                        <ion-item *ngIf="interest.direction==interestDirection">
+                            <ion-grid>
+                                <ion-row>
+                                    <ion-col align="center" size="4">
+                                        <div id="ovale" class="bold smallText ">
+                                            <div><br></div>
+                                            <div> {{interest.creationDate | date:'dd/MM/yyyy'}}</div>
+                                            <div> {{interest.creationDate | date:'HH:mm'}}</div>
+                                        </div>
+                                    </ion-col>
+                                    <ion-col size="8">
+                                        <div>
+                                            <ion-label class="bold" color="primary">
+                                                {{interest.project.title}}
+                                            </ion-label>
+                                        </div>
+                                        <p>{{interest.message}}</p>
+                                        <div *ngIf="getInverseInterest(interest).length>0" align="right">
+                                            <ion-label>
+                                                <ion-icon size="large" color="danger" name="heart-circle-outline"
+                                                          (click)="onCancelInterest(getInterest(interest.project.id,currentUser.username,'UserToProject')[0])"></ion-icon>
+                                                <ion-text class="smallText bold" color="success">Interet Partagé
+                                                </ion-text>
+                                                <ion-icon color="success" class="leftMargin" size="large"
+                                                          name="people-outline"></ion-icon>
+
+                                            </ion-label>
+                                        </div>
+                                        <div *ngIf="getInverseInterest(interest).length<=0 && interest.direction=='ProjectToUser'" align="right">
+                                            <ion-label>
+                                                <ion-icon size="large" name="heart-circle-outline"
+                                                          (click)="onInterest(interest.project)">>
+                                                </ion-icon>
+                                            </ion-label>
+                                        </div>
+
+                                    </ion-col>
+                                </ion-row>
+
+                            </ion-grid>
+                        </ion-item>
+                    </div>
+                </ion-list>
+            </ion-col>
+        </ion-row>
+    </ion-grid>
+</ion-content>
+<ion-footer class="ion-no-border" *ngIf="authenticated">
+    <ion-toolbar>
+        <ion-tabs>
+            <ion-tab-bar slot="bottom">
+                <ion-tab-button (click)="onShow('projects')" [selected]="mode=='projects'">
+                    <ion-icon name="calendar"></ion-icon>
+                    <ion-label>Projects</ion-label>
+
+                </ion-tab-button>
+
+                <ion-tab-button (click)="onShow('interests')" [selected]="mode=='interests'">
+                    <ion-icon name="megaphone-outline"></ion-icon>
+                    <ion-label>Interets</ion-label>
+                </ion-tab-button>
+            </ion-tab-bar>
+        </ion-tabs>
+    </ion-toolbar>
+</ion-footer>
+<ion-footer *ngIf="!authenticated">
+    <ion-toolbar align="center" style="background-color: #d0d0d0">
+        <ion-label style="font-size: small">
+            Pour consulter les details de chaque projet et profiter de toutes les fonctioanalités de Starter veuillez
+            <ion-text color="primary" (click)="onOpenLogin()"> vous connecter</ion-text>
+            <br>
+            <ion-text color="secondary" (click)="onOpenLogin()"> ou vous inscrire ici</ion-text>
+        </ion-label>
+    </ion-toolbar>
+</ion-footer>

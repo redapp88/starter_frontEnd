@@ -1,0 +1,11 @@
+  <ion-list >
+    <ion-item>
+      <ion-button><ion-icon name="person-circle-outline"></ion-icon><ion-text class="leftMargin" (click)="onGoToProgrammes()">{{user.name}} </ion-text></ion-button>
+    </ion-item>
+    <ion-item lines="none"  *ngFor="let project of loadedUsersProjects">
+        <ion-button fill="outline" color="secondary" expand="bloc"><ion-icon name="business-outline"></ion-icon> <ion-text class="leftMargin" (click)="onGoToUsers(project)">{{project.title}} </ion-text></ion-button>
+    </ion-item>
+    <ion-item >
+      <ion-button color="danger"><ion-icon name="exit" ></ion-icon><ion-text class="leftMargin">deconnexion </ion-text></ion-button>
+    </ion-item>
+  </ion-list>
